@@ -5,22 +5,24 @@ from color import Color
 from light import Light
 from lib import V3
 
-rubber = Material(diffuse=Color(255, 0, 0), albedo = [0.9, 0.1], spec = 10 )
-red_metal = Material(diffuse=Color(255, 0, 0), albedo = [0.8, 0.2], spec = 70)
-ivory = Material(diffuse=Color(255, 255, 255), albedo = [0.7, 0.3], spec = 50)
-white_cotton = Material(diffuse=Color(255, 255, 255), albedo = [0.9, 0.1], spec = 0)
-dark_brown_cotton = Material(diffuse=Color(181, 101, 29), albedo = [0.9, 0.1], spec = 0)
-light_brown_cotton = Material(diffuse=Color(200, 157, 124), albedo = [0.9, 0.1], spec = 0)
-black_metal = Material(diffuse=Color(0, 0, 0), albedo = [0.8, 0.2], spec = 70)
+rubber = Material(diffuse=Color(255, 0, 0), albedo = [0.9, 0.1, 0], spec = 10 )
+#red_metal = Material(diffuse=Color(255, 0, 0), albedo = [0.8, 0.2], spec = 70)
+ivory = Material(diffuse=Color(255, 255, 255), albedo = [0.7, 0.3, 0], spec = 50)
+
+mirror = Material(diffuse=Color(255, 255, 255), albedo = [0.0, 1.0, 0.8], spec = 1425)
+#white_cotton = Material(diffuse=Color(255, 255, 255), albedo = [0.9, 0.1], spec = 0)
+#dark_brown_cotton = Material(diffuse=Color(181, 101, 29), albedo = [0.9, 0.1], spec = 0)
+#light_brown_cotton = Material(diffuse=Color(200, 157, 124), albedo = [0.9, 0.1], spec = 0)
+#black_metal = Material(diffuse=Color(0, 0, 0), albedo = [0.8, 0.2], spec = 70)
 
 r = RayTracer(500, 500)
 
 r.light = Light(V3(-20, 20, 20), 2, Color(255, 255, 255))
 r.scene = [
-    Sphere(V3(0, -1.5, -10), 1.5, ivory),
-    Sphere(V3(-2, -1, -12), 2, rubber),
+    Sphere(V3(0, -1.5, -8), 1.5, ivory),
+    Sphere(V3(-2, -1, -12), 2, mirror),
     Sphere(V3(1, 1, -8), 1.7, rubber),
-    Sphere(V3(-2, 2, -10), 2, ivory),
+    Sphere(V3(-2, 2, -10), 2, mirror),
 ]
 
 #r.light = Light(position=V3(0, 0, 0), intensity=1.4, color= Color(255, 255, 255))

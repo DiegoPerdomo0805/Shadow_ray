@@ -7,13 +7,15 @@ from math import *
 from light import Light
 from color import Color
 
+max_recursion_depth = 3
+
 class RayTracer(object):
     def __init__(self, width, height):
         self.width = width
         self.height = height
         self.clear_color = Color(0, 0, 0)
         self.current_color = Color(255,255, 255)
-        self.background_color = Color(0, 0, 0)
+        self.background_color = Color(255, 255, 255)
         self.dense = 1
         self.scene = []
         self.light = None
@@ -37,7 +39,10 @@ class RayTracer(object):
     def color(self, r, g, b):
         self.current_color = Color(r, g, b)    
 
-    def cast_ray(self, origin, direction):
+    def cast_ray(self, origin, direction, recursion = 0):
+        if recursion > max_recursion_depth:
+            return self.background_color
+
         material, intersect = self.scene_intersect(origin, direction)
 
         if material is None:
@@ -47,8 +52,17 @@ class RayTracer(object):
         diffuse_intensity = dot( l_dir, intersect.normal)
         #print(material.diffuse[2], intensity)
         if diffuse_intensity < 0:
-            return self.background_color
+            return self.clear_color
         else:
+            if material.albedo[2] > 0:
+                reverse_dir = mul(direction, -1)
+                reflect_dir = reflect(reverse_dir, intersect.normal)
+                #reflect_origin = intersect.point + (intersect.normal * 0.55) #sub(intersect.point, mul(intersect.normal, 1.1))
+                reflect_origin = intersect.point + (reflect_dir * 1.1) #sub(intersect.point, mul(intersect.normal, 1.1))
+                reflect_color = self.cast_ray(reflect_origin, reflect_dir, recursion + 1)
+            else:
+                reflect_color = Color(0, 0, 0)
+
             shadow_bias = 1.1
             shadow_origin = intersect.point + (intersect.normal * shadow_bias)
             shadow_material, shadow_intersect = self.scene_intersect(shadow_origin, l_dir)
@@ -66,7 +80,10 @@ class RayTracer(object):
             specular_intensity = self.light.intensity * reflection_intensity**material.spec
             specular = self.light.color * specular_intensity * material.albedo[1]
 
-            return diffuse + specular
+
+            reflection = reflect_color * material.albedo[2]
+
+            return diffuse + specular + reflection
 
         #return material.diffuse
         #
