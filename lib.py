@@ -243,3 +243,22 @@ def writebmp(filename, width, height, pixels):
 #reflejo de un vector respecto a un plano
 def reflect(I, N):
   return I - N * 2 * dot(I, N)
+
+def refract(I, N, refractive_index):
+  etai = 1
+  etat = refractive_index
+  cosi = (-1) * dot(I, N)
+  #n = N
+  if cosi < 0:
+    cosi *= -1
+    etai *= -1
+    etat *= -1
+
+    N *= -1
+  eta = etai / etat
+  k = 1 - eta **2 * (1 - cosi **2)
+  if k < 0:
+    return V3(0, 0, 0)
+  cost = k ** 0.5
+  return norm(I * eta + N * (eta * cosi - cost))
+  #return I * eta + N * (eta * cosi - k**0.5)

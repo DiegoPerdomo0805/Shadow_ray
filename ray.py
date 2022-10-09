@@ -39,6 +39,8 @@ class RayTracer(object):
     def color(self, r, g, b):
         self.current_color = Color(r, g, b)    
 
+        
+
     def cast_ray(self, origin, direction, recursion = 0):
         if recursion > max_recursion_depth:
             return self.background_color
@@ -51,39 +53,46 @@ class RayTracer(object):
         l_dir = norm(sub(self.light.position, intersect.point))
         diffuse_intensity = dot( l_dir, intersect.normal)
         #print(material.diffuse[2], intensity)
-        if diffuse_intensity < 0:
-            return self.clear_color
+        #if diffuse_intensity < 0:
+        ##    return self.clear_color
+        #else:
+        if material.albedo[2] > 0:
+            #reverse_dir = mul(direction, -1)
+            reflect_dir = reflect(direction, intersect.normal)
+            reflect_bias = 0.1
+            #reflect_origin = intersect.point + (intersect.normal * 0.55) #sub(intersect.point, mul(intersect.normal, 1.1))
+            reflect_origin = intersect.point + (intersect.normal * reflect_bias) #sub(intersect.point, mul(intersect.normal, 1.1))
+            reflect_color = self.cast_ray(reflect_origin, reflect_dir, recursion + 1)
         else:
-            if material.albedo[2] > 0:
-                reverse_dir = mul(direction, -1)
-                reflect_dir = reflect(reverse_dir, intersect.normal)
-                #reflect_origin = intersect.point + (intersect.normal * 0.55) #sub(intersect.point, mul(intersect.normal, 1.1))
-                reflect_origin = intersect.point + (reflect_dir * 1.1) #sub(intersect.point, mul(intersect.normal, 1.1))
-                reflect_color = self.cast_ray(reflect_origin, reflect_dir, recursion + 1)
-            else:
-                reflect_color = Color(0, 0, 0)
-
-            shadow_bias = 1.1
-            shadow_origin = intersect.point + (intersect.normal * shadow_bias)
-            shadow_material, shadow_intersect = self.scene_intersect(shadow_origin, l_dir)
+            reflect_color = Color(0, 0, 0)
+        
+        
+        if material.albedo[3] > 0:
+            refract_dir = refract(direction, intersect.normal, material.refractive_index)
+            refract_bias = -0.5 if dot(refract_dir, intersect.normal) < 0 else 0.5
+            refract_origin = intersect.point + (intersect.normal * refract_bias)
+            refract_color = self.cast_ray(refract_origin, refract_dir, recursion + 1)
+            #refract_color = Color(255, 0, 0)
+            #print(refract_color)
+            #exit()
+        else:
+            refract_color = Color(0, 0, 0)
+        
+        refraction = refract_color * material.albedo[3]
+        shadow_bias = 1.1
+        shadow_origin = intersect.point + (intersect.normal * shadow_bias)
+        shadow_material, shadow_intersect = self.scene_intersect(shadow_origin, l_dir)
+        shadow_intensity = 1
+        if shadow_material:
             shadow_intensity = 1
-
-            if shadow_material:
-                shadow_intensity = 0.3
-
-
-
-            #diffuse = material.diffuse * diffuse_intensity
-            diffuse = material.diffuse * diffuse_intensity * material.albedo[0] * shadow_intensity
-            light_reflection = reflect(l_dir, intersect.normal)
-            reflection_intensity =  max(0, dot(light_reflection, direction))
-            specular_intensity = self.light.intensity * reflection_intensity**material.spec
-            specular = self.light.color * specular_intensity * material.albedo[1]
-
-
-            reflection = reflect_color * material.albedo[2]
-
-            return diffuse + specular + reflection
+        #diffuse = material.diffuse * diffuse_intensity
+        diffuse = material.diffuse * diffuse_intensity * material.albedo[0] * shadow_intensity
+        light_reflection = reflect(l_dir, intersect.normal)
+        reflection_intensity =  max(0, dot(light_reflection, direction))
+        specular_intensity = self.light.intensity * reflection_intensity**material.spec
+        specular = self.light.color * specular_intensity * material.albedo[1]
+        reflection = reflect_color * material.albedo[2]
+        return diffuse + specular + reflection + refraction
 
         #return material.diffuse
         #
