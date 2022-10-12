@@ -7,7 +7,7 @@ from math import *
 from light import Light
 from color import Color
 
-max_recursion_depth = 3
+max_recursion_depth = 5
 
 class RayTracer(object):
     def __init__(self, width, height):
@@ -39,11 +39,16 @@ class RayTracer(object):
     def color(self, r, g, b):
         self.current_color = Color(r, g, b)    
 
-        
+    def get_background(self):
+        if self.envmap:
+            return self.envmap.get_color(self.direction)
+        else:
+            return self.background_color
 
     def cast_ray(self, origin, direction, recursion = 0):
         if recursion > max_recursion_depth:
             return self.background_color
+            #return self.get_background()
 
         material, intersect = self.scene_intersect(origin, direction)
 
@@ -59,7 +64,7 @@ class RayTracer(object):
         if material.albedo[2] > 0:
             #reverse_dir = mul(direction, -1)
             reflect_dir = reflect(direction, intersect.normal)
-            reflect_bias = 0.1
+            reflect_bias = -0.5 if dot(reflect_dir, intersect.normal) < 0 else 0.5
             #reflect_origin = intersect.point + (intersect.normal * 0.55) #sub(intersect.point, mul(intersect.normal, 1.1))
             reflect_origin = intersect.point + (intersect.normal * reflect_bias) #sub(intersect.point, mul(intersect.normal, 1.1))
             reflect_color = self.cast_ray(reflect_origin, reflect_dir, recursion + 1)

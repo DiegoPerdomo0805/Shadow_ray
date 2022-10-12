@@ -1,6 +1,8 @@
 from ray import RayTracer
 from material import Material
 from sphere import Sphere
+from plane import Plane
+from plane import Plane2
 from color import Color
 from light import Light
 from lib import V3
@@ -13,7 +15,7 @@ mirror = Material(diffuse=Color(255, 255, 255), albedo = [0.0, 1.0, 0.8, 0], spe
 glass = Material(diffuse=Color(255, 255, 255), albedo = [0.0, 0.5, 0.1, 0.8], spec = 125, refractive_index = 1.5)
 
 
-dummy = Material(diffuse=Color(255, 0, 0), albedo = [0, 0, 1, 0], spec = 50, refractive_index = 1)
+#dummy = Material(diffuse=Color(255, 0, 0), albedo = [0, 0, 1, 0], spec = 50, refractive_index = 1)
 #refractive index agua = 1.33
 #refractive index vidrio = 1.5
 #refractive index diamante = 2.42
@@ -28,10 +30,21 @@ dummy = Material(diffuse=Color(255, 0, 0), albedo = [0, 0, 1, 0], spec = 50, ref
 r = RayTracer(500, 500)
 
 r.light = Light(V3(-20, 20, 20), 2, Color(255, 255, 255))
-r.scene =[
-    Sphere(V3(0, 0, -10), 1, glass), 
-    Sphere(V3(0.67, 0, -12), 1, rubber),
+#r.scene =[
+#    Sphere(V3(0, 0, -10), 1, glass), 
+#    Sphere(V3(0, 0, -12), 1, rubber),
+#]
+r.scene =[ 
+    Sphere(V3(0, -1.5, -10), 1.5, ivory),
+    Sphere(V3(0, 0, -5), 0.5, glass),
+    Sphere(V3(1, 1, -8), 1.7, rubber),
+    Sphere(V3(-3, 3, -10), 2, mirror),
+    #Plane(V3(0, -3, 0), rubber),
+    Plane2(V3(3, 1, -7.5), 4, 4, mirror),
+    #Plane2(V3(0, -3, 0), 5, 10, mirror),
 ]
+
+
 #r.scene = [
 #    Sphere(V3(0, -1.5, -8), 0.5, ivory),
 #    Sphere(V3(-1, 2, -7), 2, glass),
