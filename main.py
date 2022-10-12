@@ -2,7 +2,7 @@ from ray import RayTracer
 from material import Material
 from sphere import Sphere
 from plane import Plane
-from plane import Plane2
+from plane import Plane2, Plane3, Plane4
 from color import Color
 from light import Light
 from lib import V3
@@ -35,12 +35,17 @@ r.light = Light(V3(-20, 20, 20), 2, Color(255, 255, 255))
 #    Sphere(V3(0, 0, -12), 1, rubber),
 #]
 r.scene =[ 
-    Sphere(V3(0, -1.5, -10), 1.5, ivory),
-    Sphere(V3(0, 0, -5), 0.5, glass),
-    Sphere(V3(1, 1, -8), 1.7, rubber),
-    Sphere(V3(-3, 3, -10), 2, mirror),
+    Sphere(V3(0, -1.5, -10), 1, ivory),
+    Sphere(V3(0, 0, -5), 0.5, mirror),
+    Sphere(V3(1, 1, -8), 1, rubber),
+    ##Sphere(V3(-3, 3, -10), 2, mirror),
     #Plane(V3(0, -3, 0), rubber),
-    Plane2(V3(3, 1, -7.5), 4, 4, mirror),
+    Plane2(V3(0, 3, -7.5), 4, 4, mirror),
+    Plane3(V3(2, 3, -7.5), 4, 4, mirror),
+    Plane3(V3(-2, 0, -7.5), 4, 4, mirror),
+    #Plane3(V3(2, 3, -7.5), 4, 4, mirror, False),
+    Plane4(V3(2, 0, 10), 2, 2, rubber),
+    Plane4(V3(-1, 0, 1), 0.5, 2, rubber, False),
     #Plane2(V3(0, -3, 0), 5, 10, mirror),
 ]
 
