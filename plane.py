@@ -29,11 +29,11 @@ class Plane2(object):
     def ray_intersect(self, origin, direction):
         d = -(origin.y + self.center.y) / direction.y
         impact = sum(origin, mul(direction, d))
-        normal = V3(0, 0, 0)
-        if self.under:
-            normal = V3(0, -1, 0)
-        else:
-            normal = V3(0, 1, 0)
+        normal = V3(0, -1, 0)
+        #if self.under:
+         #   normal = V3(0, -1, 0)
+        #else:
+         #   normal = V3(0, 1, 0)
         # z with height
         # x with width
 
@@ -90,10 +90,10 @@ class Plane4(object):
         d = -(origin.z + self.center.z) / direction.z
         impact = sum(origin, mul(direction, d))
         normal = V3(0, 0, 1)
-        if self.front:
-            normal = V3(0, 0, 1)
-        else:
-            normal = V3(0, 0, -1)
+        #if self.front:
+        #    normal = V3(0, 0, 1)
+        #else:
+        #    normal = V3(0, 0, -1)
         # z with height
         # x with width
 
@@ -104,3 +104,14 @@ class Plane4(object):
             #or impact.z < -self.h or impact.z > self.h
             return None
         return Intersect(distance=d, point=impact, normal=normal)
+
+def Cube(size, pos, material, scene):
+    c = [
+        Plane2(V3(0+pos.x, (size/2)+pos.y, pos.z), size, size, material),
+        Plane2(V3(0+pos.x, -(size/2)+pos.y, pos.z), size, size, material),
+        Plane3(V3((size/2)-pos.x, 0-pos.y, pos.z), size, size, material),
+        Plane3(V3(-(size/2)-pos.x, 0-pos.y, pos.z), size, size, material),
+        Plane4(V3(0+pos.x, 0-pos.y, -(pos.z)-(size/2)), size, size, material),
+    ]
+    for e in c:
+        scene.append(e)
