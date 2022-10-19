@@ -1,5 +1,7 @@
+from operator import le
 from lib import V3, sum, sub, mul, dot, cross, length, norm
 from intersect import Intersect
+from material import Material
 
 class Plane(object):
     def __init__(self, position, material, normal = V3(0, 1, 0)):
@@ -18,7 +20,7 @@ class Plane(object):
 
 
 #plano a lo largo del eje y
-class Plane2(object):
+class PlaneY(object):
     def __init__(self, center, w, h, material, under=True):
         self.center = center
         self.w = w
@@ -47,7 +49,7 @@ class Plane2(object):
 
 
 #plano a lo largo del eje x
-class Plane3(object):
+class PlaneX(object):
     def __init__(self, center, w, h, material, left=True):
         self.center = center
         self.w = w
@@ -78,7 +80,7 @@ class Plane3(object):
 
 
 #plano a lo largo del eje z
-class Plane4(object):
+class PlaneZ(object):
     def __init__(self, center, w, h, material, front=True):
         self.center = center
         self.w = w
@@ -107,11 +109,36 @@ class Plane4(object):
 
 def Cube(size, pos, material, scene):
     c = [
-        Plane2(V3(0+pos.x, (size/2)+pos.y, pos.z), size, size, material),
-        Plane2(V3(0+pos.x, -(size/2)+pos.y, pos.z), size, size, material),
-        Plane3(V3((size/2)-pos.x, 0-pos.y, pos.z), size, size, material),
-        Plane3(V3(-(size/2)-pos.x, 0-pos.y, pos.z), size, size, material),
-        Plane4(V3(0+pos.x, 0-pos.y, -(pos.z)-(size/2)), size, size, material),
+        PlaneY(V3(0+pos.x, (size/2)+pos.y, pos.z), size, size, material),
+        PlaneY(V3(0+pos.x, -(size/2)+pos.y, pos.z), size, size, material),
+        PlaneX(V3((size/2)-pos.x, 0-pos.y, pos.z), size, size, material),
+        PlaneX(V3(-(size/2)-pos.x, 0-pos.y, pos.z), size, size, material),
+        PlaneZ(V3(0+pos.x, 0-pos.y, -(pos.z)-(size/2)), size, size, material),
     ]
     for e in c:
         scene.append(e)
+
+
+def Cuboid(w, h, d, pos, material, scene):
+    c = [
+        PlaneY(V3(0+pos.x, (h/2)+pos.y, pos.z), w, d, material),
+        PlaneY(V3(0+pos.x, -(h/2)+pos.y, pos.z), w, d, material),
+        PlaneX(V3((w/2)-pos.x, 0-pos.y, pos.z), h, d, material),
+        PlaneX(V3(-(w/2)-pos.x, 0-pos.y, pos.z), h, d, material),
+        PlaneZ(V3(0+pos.x, 0-pos.y, -(pos.z)-(d/2)), w, h, material),
+    ]
+    for e in c:
+        scene.append(e)
+
+
+def Tree(size, scene, x, y, z, wood, leaf):
+    #trunk
+    Cuboid(size/10, size, size/10, V3(x,y,z), wood, scene)
+    #leaves
+    Cuboid(size*0.6, size/10, size*0.6, V3(x,y+(size/2),z), leaf, scene)
+    Cuboid(size*0.5, size/10, size*0.5, V3(x,y+(size/2)+(size/10),z), leaf, scene)
+    Cuboid(size*0.4, size/10, size*0.4, V3(x,y+(size/2)+(size/10)*2,z), leaf, scene)
+    Cuboid(size*0.3, size/10, size*0.3, V3(x,y+(size/2)+(size/10)*3,z), leaf, scene)
+
+
+    
