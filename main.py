@@ -20,13 +20,13 @@ glass = Material(diffuse=Color(255, 255, 255), albedo = [0.0, 0.5, 0.1, 0.8], sp
 #blue_glass = Material(diffuse=Color(0, 0, 255), albedo = [0.0, 0.5, 0.1, 0.8], spec = 125, refractive_index = 1.5)
 
 #sand = Material(diffuse=Color(244, 209, 107), albedo = [0.9, 0.1, 0, 0], spec = 50)
-steel = Material(diffuse=Color(255, 255, 255), albedo = [0.8, 0.2, 0, 0], spec = 50)
+#steel = Material(diffuse=Color(255, 255, 255), albedo = [0.8, 0.2, 0, 0], spec = 50)
 gold = Material(diffuse=Color(255, 223, 0), albedo = [0.6, 0.3, 0, 0], spec = 75, refractive_index=1.5)
 red_metal = Material(diffuse=Color(255, 0, 0), albedo = [0.8, 0.2, 0, 0], spec = 75, refractive_index=1.5)
 
-skin = Material(diffuse=Color(255, 255, 255), albedo = [0.7, 0.3, 0, 0], spec = 50)
-hair = Material(diffuse=Color(0, 0, 0), albedo = [0.7, 0.3, 0, 0], spec = 50)
-celeste_dress = Material(diffuse=Color(0, 255, 255), albedo = [0.7, 0.3, 0, 0], spec = 50)
+skin = Material(diffuse=Color(230, 215, 222), albedo = [0.7, 0.3, 0, 0], spec = 50)
+brown_hair = Material(diffuse=Color(87, 60, 30), albedo = [0.7, 0.3, 0, 0], spec = 50)
+celeste_dress = Material(diffuse=Color(148, 206, 242), albedo = [0.7, 0.3, 0, 0], spec = 50)
 
 
 #dummy = Material(diffuse=Color(255, 0, 0), albedo = [0, 0, 1, 0], spec = 50, refractive_index = 1)
@@ -110,12 +110,16 @@ r.scene.append(PlaneX(V3(3, 0, -5), 2, 2.5, ivory))
 
 #espejos
 #REABILITAR
-#r.scene.append(PlaneX(V3(-3, 0, -7.5), 2.25, 2.75, gold))
-#r.scene.append(PlaneX(V3(3, 0, -7.5), 2.25, 2.75, gold))
-r.scene.append(PlaneX(V3(-2.99, 0, -6.25), 3, 2.5, mirror))
-r.scene.append(PlaneX(V3( 2.99, 0, -6.25), 3, 2.5, mirror))
+r.scene.append(PlaneX(V3(-2.98, 0, -6.25), 3.15, 2.75, gold))
+r.scene.append(PlaneX(V3( 2.98, 0, -6.25), 3.15, 2.75, gold))
+r.scene.append(PlaneX(V3(-2.97, 0, -6.25), 3, 2.5, mirror))
+r.scene.append(PlaneX(V3( 2.97, 0, -6.25), 3, 2.5, mirror))
+
+
+
 
 #pared trasera
+
 r.scene.append(PlaneZ(V3(0, -1, 10), 6.5, 4, ivory))
 r.scene.append(PlaneZ(V3(0, 2, 10), 6.5, 2, wood))
 
@@ -140,6 +144,43 @@ r.scene.append(PlaneZ(V3(-1.75, 1.5, 9.9), 1.625, 3, red_metal))
 
 Cube(1.25, V3(0, 2+.5, -6.5), glass, r.scene)
 Cuboid(1.25, 0.25, 1.25, V3(0, 1.25+.5, -6.5), gold, r.scene)
+
+
+#gemelas
+pos_x = 0
+pos_y = -1.5
+pos_z = -7.5
+distance_on_x = 1.5
+
+#dress
+Cuboid(0.66, 1.33, 0.66, V3(pos_x+distance_on_x, pos_y, pos_z), celeste_dress, r.scene)
+
+#legs
+Cuboid(0.5, 0.75, 0.33, V3(pos_x+distance_on_x, pos_y-((1.33/2)+(0.75/2)), pos_z), skin, r.scene)
+
+#head
+Cube(0.45, V3(pos_x+distance_on_x, pos_y+((1.33/2)+0.225), pos_z), skin, r.scene)
+#hair
+Cube(0.55, V3(pos_x+distance_on_x, pos_y+((1.33/2)+0.225)+0.1, pos_z-0.1), brown_hair, r.scene)
+
+#arms
+Cuboid(1.1, 0.825, 0.33, V3(pos_x+distance_on_x, pos_y+0.2, pos_z), skin, r.scene)
+
+
+#dress
+Cuboid(0.66, 1.33, 0.66, V3(pos_x-distance_on_x, pos_y, pos_z), celeste_dress, r.scene)
+
+#legs
+Cuboid(0.5, 0.75, 0.33, V3(pos_x-distance_on_x, pos_y-((1.33/2)+(0.75/2)), pos_z), skin, r.scene)
+
+#head
+Cube(0.45, V3(pos_x-distance_on_x, pos_y+((1.33/2)+0.225), pos_z), skin, r.scene)
+
+#hair
+Cube(0.55, V3(pos_x-distance_on_x, pos_y+((1.33/2)+0.225)+0.1, pos_z-0.1), brown_hair, r.scene)
+
+#arms
+Cuboid(1.1, 0.825, 0.33, V3(pos_x-distance_on_x, pos_y+0.2, pos_z), skin, r.scene)
 
 
 
